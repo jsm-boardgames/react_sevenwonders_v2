@@ -117,11 +117,18 @@ class OpenGames extends React.Component {
 }
 
 
-function Lobby(props) {
+const Lobby = ({login, displayMessage, sendMessage, games = []}) => {
   const [name, setName] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const onLogin = (e) => {
     e.preventDefault();
-    console.log('well interesting...');
+    if (!isLoggedIn) {
+      setIsLoggedIn(true);
+      displayMessage({text: 'Logging into server...', type: 'info'});
+      login(name);
+    } else {
+      displayMessage({text: 'Already logged in, please reload if you wish to log in with a different alias.', type: 'error'});
+    }
   };
   return (
       <div>
@@ -136,15 +143,15 @@ function Lobby(props) {
             <button type='submit' className='w-1/5 rounded-lg mx-4 bg-blue-400 text-white text-lg border-4 border-blue-200 hover:border-blue-400 hover:bg-blue-700'>Submit</button>
           </form>
         </div>
-        <div className={!!name ? 'container flex my-4 mx-auto' : 'container flex my-4 mx-auto hidden'}>
+        <div className={isLoggedIn ? 'container flex my-4 mx-auto' : 'container flex my-4 mx-auto hidden'}>
           <div className='w-1/2 mx-4 bg-gray-200 rounded-lg'>
-            <CreateGame sendMessage={props.sendMessage} hasFocus={props.name != null} />
+            <CreateGame sendMessage={sendMessage} hasFocus={isLoggedIn} />
           </div>
           <div className='w-1/2 mx-4 bg-gray-200 rounded-lg'>
             <div className='flex flex-col'>
               <div className='text-xl text-center mt-3'>Open Games</div>
               <Separator color='gray-400' margin='4' />
-              <OpenGames games={props.games} sendMessage={props.sendMessage} />
+              <OpenGames games={games} sendMessage={sendMessage} />
             </div>
           </div>
         </div>
