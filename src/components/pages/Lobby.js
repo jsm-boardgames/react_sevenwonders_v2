@@ -24,7 +24,7 @@ class Login extends React.Component {
             </div>
             <input ref={this.inputRef} type='text' name='name' className='form-control' required />
             <div className='input-group-append'>
-            <button type='submit' className='w-1/5 rounded-lg mx-4 bg-blue-400 text-blue-700'>Submit</button>
+            <button type='submit' className='w-1/5 rounded-lg mx-4 bg-blue-400 text-white text-lg border-4 border-blue-200 hover:border-blue-400 hover:bg-blue-700'>Submit</button>
             </div>
           </div>
         </div>
@@ -79,7 +79,7 @@ const CreateGame = (props) => {
           <Input name='players' value={players} onChange={(e) => setPlayers(e.target.value)} label='Players' htmlAttributes={{required: true, min: '3', max: '7'}} type='number' />
         </div>
         <div className='mb-4 my-4 flex justify-center'>
-          <button type='submit' className='h-12 w-1/5 rounded-lg mx-4 bg-blue-400 text-blue-700'>Start Game</button>
+          <button type='submit' className='h-12 w-1/5 rounded-lg mx-4 bg-blue-400 text-white text-lg border-4 border-blue-200 hover:border-blue-400 hover:bg-blue-700'>Start Game</button>
         </div>
       </form>
     </div>
@@ -133,7 +133,7 @@ function Lobby(props) {
           <Separator color='gray-400' margin='4' />
           <form onSubmit={onLogin} className='flex py-10'>
             <Input name='name' value={name} htmlAttributes={{required: true}} onChange={(e) => setName(e.target.value)} hasFocus={!name} />
-            <button type='submit' className='w-1/5 rounded-lg mx-4 bg-blue-400 text-blue-700'>Submit</button>
+            <button type='submit' className='w-1/5 rounded-lg mx-4 bg-blue-400 text-white text-lg border-4 border-blue-200 hover:border-blue-400 hover:bg-blue-700'>Submit</button>
           </form>
         </div>
         <div className={!!name ? 'container flex my-4 mx-auto' : 'container flex my-4 mx-auto hidden'}>
