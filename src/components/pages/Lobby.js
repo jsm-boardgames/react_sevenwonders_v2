@@ -2,67 +2,17 @@ import React, { Fragment, useState } from 'react';
 import Input from './../Input';
 import Separator from './../Separator';
 
-class Login extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      showValidation: false
-    };
-    this.inputRef = React.createRef();
-
-    this.onSubmit = this.onSubmit.bind(this);
-  }
-
-  render() {
-    return (
-      <form onSubmit={this.onSubmit} className={this.state.showValidation ? 'was-validated' : ''}>
-        <div className='form-group'>
-          <div className='input-group mb-4'>
-            <div className='input-group-prepend'>
-              <span className='input-group-text bg-secondary text-white'>Name:</span>
-            </div>
-            <input ref={this.inputRef} type='text' name='name' className='form-control' required />
-            <div className='input-group-append'>
-            <button type='submit' className='w-1/5 rounded-lg mx-4 bg-blue-400 text-white text-lg border-4 border-blue-200 hover:border-blue-400 hover:bg-blue-700'>Submit</button>
-            </div>
-          </div>
-        </div>
-      </form>
-    );
-  }
-
-  componentDidMount() {
-    if (this.props.hasFocus) {
-      this.inputRef.current.focus();
-    }
-  }
-
-  componentDidUpdate() {
-    if (this.props.hasFocus) {
-      this.inputRef.current.focus();
-    }
-  }
-
-  onSubmit(e) {
-    e.preventDefault();
-    this.setState({showValidation: true});
-    if (e.target.checkValidity()) {
-      let data = new FormData(e.target);
-      this.props.login(data.get('name'));
-    } else {
-      return;
-    }
-  }
-}
-
-const CreateGame = (props) => {
+const CreateGame = ({sendMessage, hasFocus}) => {
   const [gameName, setGameName] = useState('');
   const [players, setPlayers] = useState(3);
   const onSubmit = (e) => {
     e.preventDefault();
     if (e.target.checkValidity()) {
-      console.log('valid!');
+      sendMessage({
+        name: gameName,
+        maxPlayers: players,
+        messageType: 'newGame'
+      });
     } else {
       return;
     }
@@ -73,7 +23,7 @@ const CreateGame = (props) => {
       <Separator color='gray-400' margin='4' />
       <form onSubmit={onSubmit} className='flex flex-col'>
         <div className='m-4 flex'>
-          <Input name='gameName' value={gameName} onChange={(e) => setGameName(e.target.value)} label='Game Name' htmlAttributes={{required: true}} />
+          <Input name='gameName' value={gameName} onChange={(e) => setGameName(e.target.value)} label='Game Name' htmlAttributes={{required: true}} hasFocus={hasFocus} />
         </div>
         <div className='m-4 flex'>
           <Input name='players' value={players} onChange={(e) => setPlayers(e.target.value)} label='Players' htmlAttributes={{required: true, min: '3', max: '7'}} type='number' />
@@ -86,34 +36,24 @@ const CreateGame = (props) => {
   );
 }
 
-class OpenGame extends React.Component {
-  constructor(props) {
-    super(props);
-    this.onClick = this.onClick.bind(this);
+const OpenGame = ({id, name, creatorName, maxPlayers, sendMessage}) => {
+  const onClick = () => {
+    sendMessage({
+      messageType: 'joinGame',
+      id: id
+    });
   }
+  return (
+    <button className='m-4 bg-gray-400 h-12 border-4 text-center hover:border-blue-400 rounded-lg' onClick={onClick}>
+      {name} - {creatorName} ({maxPlayers})
+    </button>
+  );
 
-  render() {
-    return (
-      <button className='m-4 bg-gray-400 h-12 border-4 text-center hover:border-blue-400 rounded-lg' onClick={this.onClick}>
-        {this.props.name} - {this.props.creatorName} ({this.props.maxPlayers})
-      </button>
-    );
-  }
-
-  onClick(e) {
-    console.log('click click click');
-  }
 }
 
-class OpenGames extends React.Component {
-  render() {
-    let sendMessage = this.props.sendMessage;
-    const gamesList = /*this.props.games*/[
-      {id: 1, name: 'game 1', creatorName: 'bob', maxPlayers: 5},
-      {id: 2, name: 'game 2', creatorName: 'jane', maxPlayers: 3}
-    ].map(g => <OpenGame {...g} sendMessage={sendMessage} key={g.id} />);
-    return <Fragment>{gamesList}</Fragment>;
-  }
+const OpenGames = ({games, sendMessage}) => {
+  const gamesList = games.map(g => <OpenGame {...g} sendMessage={sendMessage} key={g.id} />);
+  return <>{gamesList}</>;
 }
 
 
@@ -124,38 +64,42 @@ const Lobby = ({login, displayMessage, sendMessage, games = []}) => {
     e.preventDefault();
     if (!isLoggedIn) {
       setIsLoggedIn(true);
-      displayMessage({text: 'Logging into server...', type: 'info'});
       login(name);
     } else {
       displayMessage({text: 'Already logged in, please reload if you wish to log in with a different alias.', type: 'error'});
     }
   };
+  const playerInfo = isLoggedIn ?
+      (<div className='text-center py-12 text-lg font-semibold'>{name}</div>) :
+      (
+        <form onSubmit={onLogin} className='flex py-10'>
+          <Input name='name' value={name} htmlAttributes={{required: true}} onChange={(e) => setName(e.target.value)} hasFocus={!name} />
+          <button type='submit' className='w-1/5 rounded-lg mx-4 bg-blue-400 text-white text-lg border-4 border-blue-200 hover:border-blue-400 hover:bg-blue-700'>Submit</button>
+        </form>
+      );
   return (
-      <div>
-        <div className='bg-gray-200 container mx-auto rounded-lg'>
-          <h1 className='text-center text-3xl my-4'>Seven Wonders</h1>
-          <div className='text-center'>
-            <p>Created by Antoine Bauza, published by Repos Productions</p>
-          </div>
-          <Separator color='gray-400' margin='4' />
-          <form onSubmit={onLogin} className='flex py-10'>
-            <Input name='name' value={name} htmlAttributes={{required: true}} onChange={(e) => setName(e.target.value)} hasFocus={!name} />
-            <button type='submit' className='w-1/5 rounded-lg mx-4 bg-blue-400 text-white text-lg border-4 border-blue-200 hover:border-blue-400 hover:bg-blue-700'>Submit</button>
-          </form>
+    <div>
+      <div className='bg-gray-200 container mx-auto rounded-lg'>
+        <h1 className='text-center text-3xl my-4'>Seven Wonders</h1>
+        <div className='text-center'>
+          <p>Created by Antoine Bauza, published by Repos Productions</p>
         </div>
-        <div className={isLoggedIn ? 'container flex my-4 mx-auto' : 'container flex my-4 mx-auto hidden'}>
-          <div className='w-1/2 mx-4 bg-gray-200 rounded-lg'>
-            <CreateGame sendMessage={sendMessage} hasFocus={isLoggedIn} />
-          </div>
-          <div className='w-1/2 mx-4 bg-gray-200 rounded-lg'>
-            <div className='flex flex-col'>
-              <div className='text-xl text-center mt-3'>Open Games</div>
-              <Separator color='gray-400' margin='4' />
-              <OpenGames games={games} sendMessage={sendMessage} />
-            </div>
+        <Separator color='gray-400' margin='4' />
+        {playerInfo}
+      </div>
+      <div className={isLoggedIn ? 'container flex my-4 mx-auto' : 'container flex my-4 mx-auto hidden'}>
+        <div className='w-1/2 mx-4 bg-gray-200 rounded-lg'>
+          <CreateGame sendMessage={sendMessage} hasFocus={isLoggedIn} />
+        </div>
+        <div className='w-1/2 mx-4 bg-gray-200 rounded-lg'>
+          <div className='flex flex-col'>
+            <div className='text-xl text-center mt-3'>Open Games</div>
+            <Separator color='gray-400' margin='4' />
+            <OpenGames games={games} sendMessage={sendMessage} />
           </div>
         </div>
       </div>
+    </div>
   );
 }
 

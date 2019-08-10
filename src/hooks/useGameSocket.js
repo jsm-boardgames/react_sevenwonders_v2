@@ -1,4 +1,4 @@
-import {useRef, useEffect} from 'react';
+import {useRef, useEffect, useReducer} from 'react';
 
 const WS_PROTOCOL = `ws${window.location.protocol === 'https;' ? 's' : ''}:`;
 const WS_HOST = window.location.hostname;
@@ -9,8 +9,12 @@ const createSocket = () => {
   else if (window.MozWebSocket) return new window.MozWebSocket(WS_URI);
 };
 
-const useGameSocket = ({onMessage, onError}) => {
+const useGameSocket = ({displayMessage, parseMessage}) => {
   const wsRef = useRef(null);
+  const onError = (event) => {
+    displayMessage({text: `ERROR: I'm sorry, something went wrong with the websocket!`, type: 'error'});
+    console.error(event, event.data);
+  };
   // ensure WS is ready before using it!
   const wsReady = () => {
     return wsRef.current && wsRef.current.readyState === 1;
@@ -30,15 +34,17 @@ const useGameSocket = ({onMessage, onError}) => {
         sendMessage({messageType: 'login', id, name: userName});
       };
   };
+  // create socket once, and close it when it powers down
   useEffect(() => {
     wsRef.current = createSocket();
-    wsRef.current.onmessage = onMessage;
-    wsRef.current.onerror = onError;
     // close socket when component unmounts
     return wsRef.current.close;
-    // if using the onMessage/onError to see if it needs to be re-run, make sure to use useCallback
-    // or this will run on each render of app... since only using call once on startup use empty array of dependancies instead
-  }, [/*onMessage, onError*/]);
+  }, []);
+  // rebind listeners each time the methods change
+  useEffect(() => {
+    wsRef.current.onmessage = parseMessage;
+    wsRef.current.onerror = onError;
+  }, [parseMessage, onError]);
   return [login, sendMessage];
 };
 
