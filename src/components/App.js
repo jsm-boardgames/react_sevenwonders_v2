@@ -12,7 +12,12 @@ const INITIAL_STATE = {
   players: [],
   hand: [],
   playersInfo: [],
-  status: 'lobby'
+  playerInfo: {},
+  status: 'lobby',
+  wonderOption: {},
+  wonders: [],
+  playOrder: [],
+  direction: 'left'
 };
 
 const reducer = (state, action) => {
@@ -35,6 +40,27 @@ const reducer = (state, action) => {
   } else if (action.messageType === 'newPlayer') {
     const players = state.players.concat(action);
     return {...state, players};
+  } else if (action.messageType === 'wonderOption') {
+    return {...state, wonderOption: action.wonderOption, status: 'chooseSide'};
+  } else if (action.messageType === 'sideChosen') {
+    const wonders = state.wonders.concat({...action.wonder, playerId: action.playerId});
+    return {...state, wonders};
+  } else if (action.messageType === 'playOrder') {
+    return {...state, playOrder: action.playOrder, direction: action.direction};
+  } else if (action.messageType === 'hand') {
+    return {...state, hand: action.hand};
+  } else if (action.messageType === 'startInfo') {
+    const playerInfo = {
+      ...state.playerInfo,
+      coins: action.coins,
+      military: action.military,
+      leftCards: action.leftcards,
+      rightCards: action.rightcards,
+      rejoin: action.rejoin,
+      wonder: action.wonder,
+      played: action.played
+    };
+    return {...state, playerInfo, playersInfo: action.plinfo};
   } else {
     console.warn('Unhandled message', action);
     return state;
@@ -68,14 +94,28 @@ function App() {
     //playCombos
   };
   const [login, sendMessage] = useGameSocket({displayMessage, parseMessage});
+  const getPage = () => {
+    if (gameState.status === 'lobby') {
+      return <Lobby login={login} sendMessage={sendMessage} displayMessage={displayMessage} games={gameState.games} />
+    } else if (gameState.status === 'waiting') {
+      return <Waiting players={gameState.players} {...gameState.game} />
+    } else if (gameState.status === 'chooseSide') {
+      return <div>Coming soon?</div>
+    } else if (gameState.status === 'playing') {
+      return <Game />
+    } else if (gameState.status === 'finished') {
+      return <div>GAME OVER!</div>
+    } else {
+      displayMessage({text: 'ERROR! Unhandled game state.', type: 'error'});
+      return null;
+    }
+  }
   return (
     <div className='App'>
       <div className="w-10/12 mx-auto">
         <MessageDiv text={message} type={messageType} dismissMessage={() => setMessage('')} />
       </div>
-      <Lobby login={login} sendMessage={sendMessage} displayMessage={displayMessage} games={gameState.games} />
-      <Waiting players={gameState.players} {...gameState.game} />
-      <Game />
+      {getPage()}
     </div>
   );
 }
