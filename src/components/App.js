@@ -2,6 +2,7 @@ import React, {useState, useCallback, useReducer} from 'react';
 import Game from './pages/Game';
 import Lobby from './pages/Lobby';
 import Waiting from './pages/Waiting';
+import ChooseSide from './pages/ChooseSide';
 import MessageDiv from './MessageDiv';
 import useGameSocket from './../hooks/useGameSocket';
 
@@ -100,7 +101,7 @@ function App() {
     } else if (gameState.status === 'waiting') {
       return <Waiting players={gameState.players} {...gameState.game} />
     } else if (gameState.status === 'chooseSide') {
-      return <div>Coming soon?</div>
+      return <ChooseSide sendMessage={sendMessage} {...gameState.wonderOption} maxPlayers={gameState.game.maxPlayers} wonders={gameState.wonders} />
     } else if (gameState.status === 'playing') {
       return <Game />
     } else if (gameState.status === 'finished') {
