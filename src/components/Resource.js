@@ -1,5 +1,5 @@
 import React from 'react';
-const NATURAL_RESOURCES = ['S', 'C', 'O', 'T'];
+const NATURAL_RESOURCES = ['S', 'C', 'O', 'W'];
 const isNaturalResource = (resource) => {
   return NATURAL_RESOURCES.some(r => resource.indexOf(r) > -1);
 };

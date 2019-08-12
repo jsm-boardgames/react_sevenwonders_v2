@@ -4,6 +4,7 @@ import Lobby from './pages/Lobby';
 import Waiting from './pages/Waiting';
 import ChooseSide from './pages/ChooseSide';
 import MessageDiv from './MessageDiv';
+import Overlay from './Overlay';
 import useGameSocket from './../hooks/useGameSocket';
 
 const INITIAL_STATE = {
@@ -45,7 +46,8 @@ const reducer = (state, action) => {
     return {...state, wonderOption: action.wonderOption, status: 'chooseSide'};
   } else if (action.messageType === 'sideChosen') {
     const wonders = state.wonders.concat({...action.wonder, playerId: action.playerId});
-    return {...state, wonders};
+    const status = wonders.length === state.players.length ? 'playing' : state.status;
+    return {...state, wonders, status};
   } else if (action.messageType === 'playOrder') {
     return {...state, playOrder: action.playOrder, direction: action.direction};
   } else if (action.messageType === 'hand') {
@@ -70,6 +72,7 @@ const reducer = (state, action) => {
 
 function App() {
   const [gameState, handleMessage] = useReducer(reducer, INITIAL_STATE);
+  const [overlayChildren, setOverlayChildren] = useState(null);
   const parseMessage = useCallback((msg) => {
     try {
       handleMessage(JSON.parse(msg.data));
@@ -103,7 +106,7 @@ function App() {
     } else if (gameState.status === 'chooseSide') {
       return <ChooseSide sendMessage={sendMessage} {...gameState.wonderOption} maxPlayers={gameState.game.maxPlayers} wonders={gameState.wonders} />
     } else if (gameState.status === 'playing') {
-      return <Game />
+      return <Game setOverlayChildren={setOverlayChildren} sendMessage={sendMessage} hand={gameState.hand} playersInfo={gameState.playersInfo} playerInfo={gameState.playerInfo} playOrder={gameState.playOrder} wonders={gameState.wonders} direction={gameState.direction} />
     } else if (gameState.status === 'finished') {
       return <div>GAME OVER!</div>
     } else {
@@ -112,12 +115,15 @@ function App() {
     }
   }
   return (
-    <div className='App'>
-      <div className="w-10/12 mx-auto">
-        <MessageDiv text={message} type={messageType} dismissMessage={() => setMessage('')} />
+    <>
+      {overlayChildren && <Overlay dismiss={() => setOverlayChildren(null)}>{overlayChildren}</Overlay>}
+      <div className='App'>
+        <div className="w-10/12 mx-auto">
+          <MessageDiv text={message} type={messageType} dismissMessage={() => setMessage('')} />
+        </div>
+        {getPage()}
       </div>
-      {getPage()}
-    </div>
+    </>
   );
 }
 

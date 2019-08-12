@@ -1,20 +1,20 @@
 /* CARDS */
-.sw-card {
-  fill-opacity: 0.1;
+.sw-hand .sw-card {
+  opacity: 0.1;
 }
 
 .sw-card rect {
   stroke: black;
   stroke-width: 1;
-  stroke-opacity: 0.1;
+  #stroke-opacity: 0.1;
 }
 
 .sw-card text {
   fill: black;
 }
 
-.sw-card:hover {
-  fill-opacity: 1.0;
+.sw-hand .sw-card:hover {
+  opacity: 1.0;
 }
 
 .sw-natural-resource-card {
@@ -29,6 +29,34 @@
   fill: #ff3333;
 }
 
+.sw-commercial-card {
+  fill: #f6e05e;
+}
+
+.sw-manufactured-resource-card {
+  fill: #cbd5e0;
+}
+
+.sw-science-card {
+  fill: #68d391;
+}
+
+.sw-guild-card {
+  fill: #b794f4;
+}
+
 .bg-brown-400 {
   background-color: #cc6633;
+}
+
+.sw-overlay {
+  background-color: rgba(18, 22, 28, 0.7);
+}
+
+.h-screen-50 {
+  height: 50vh;
+}
+
+.h-screen-75 {
+  height: 75vh;
 }
