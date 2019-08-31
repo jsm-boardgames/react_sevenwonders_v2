@@ -1,6 +1,7 @@
 import React from 'react';
 import Resource from './Resource';
 import Separator from './Separator';
+import GameBadge from './GameBadge';
 
 const WonderStage = ({stage, cost, points, military, coins, resource, science, custom}) => {
   const stageNum = stage === 4 ? 'IV' : 'I'.repeat(stage);
@@ -12,12 +13,12 @@ const WonderStage = ({stage, cost, points, military, coins, resource, science, c
       </div>
       <Separator />
       <div>
-        {points && <span className='bg-blue-400 m-1 px-2 py-1 rounded-lg'>{points}</span>}
-        {military && <span className='bg-red-400 m-1 px-2 py-1 rounded-lg'>{military}</span>}
-        {coins && <span className='bg-yellow-400 m-1 px-2 py-1 rounded-lg'>{coins}</span>}
+        {points && <GameBadge type='civilian' value={points} />}
+        {military && <GameBadge type='military' value={military} />}
+        {coins && <GameBadge type='treasury' value={coins} />}
         {resource && <Resource resource={resource} />}
-        {science && <span className='bg-green-400 m-1 px-2 py-1 rounded-lg'>{science}</span>}
-        {custom && <span className='bg-blue-400 m-1 px-2 py-1 rounded-lg'>{custom}</span>}
+        {science && <GameBadge type='science' value={science} />}
+        {custom && <GameBadge type='guild' value={custom} />}
       </div>
     </div>
   );

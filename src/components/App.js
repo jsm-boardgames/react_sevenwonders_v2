@@ -118,7 +118,15 @@ function App() {
     } else if (gameState.status === 'chooseSide') {
       return <ChooseSide sendMessage={sendMessage} {...gameState.wonderOption} maxPlayers={gameState.game.maxPlayers} wonders={gameState.wonders} />
     } else if (gameState.status === 'playing') {
-      return <Game setOverlayChildren={setOverlayChildren} sendMessage={sendMessage} hand={gameState.hand} playersInfo={gameState.playersInfo} playerInfo={gameState.playerInfo} playOrder={gameState.playOrder} wonders={gameState.wonders} direction={gameState.direction} wonderCombos={gameState.wonderCombos} />
+      return <Game setOverlayChildren={setOverlayChildren}
+          sendMessage={sendMessage}
+          hand={gameState.hand}
+          playersInfo={gameState.playersInfo}
+          playerInfo={gameState.playerInfo} 
+          playOrder={gameState.playOrder}
+          wonders={gameState.wonders}
+          direction={gameState.direction}
+          wonderCombos={gameState.wonderCombos} />
     } else if (gameState.status === 'finished') {
       return <div>GAME OVER!</div>
     } else {
