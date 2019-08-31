@@ -1,12 +1,15 @@
 import React from 'react';
 import Hand from './../Hand';
+import PlayersInfo from './../PlayersInfo';
 
-const Game = ({playersInfo, hand, playOrder, direction, wonders, playerInfo, setOverlayChildren, sendMessage}) => {
+const Game = ({playersInfo, hand, playOrder, direction, wonders, playerInfo, setOverlayChildren, sendMessage, wonderCombos}) => {
   return (
     <div className='w-full h-full'>
-      <div className="w-1/4 inline">Info here about who's in the game</div>
+      <div className="w-1/4 inline-flex h-full">
+        <PlayersInfo playersInfo={playersInfo} />
+      </div>
       <div className="w-3/4 inline float-right">
-        <Hand hand={hand} setOverlayChildren={setOverlayChildren} sendMessage={sendMessage} />
+        <Hand hand={hand} setOverlayChildren={setOverlayChildren} sendMessage={sendMessage} wonderCombos={wonderCombos} />
       </div>
     </div>
   );

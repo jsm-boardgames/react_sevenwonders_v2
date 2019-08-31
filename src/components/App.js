@@ -13,10 +13,11 @@ const INITIAL_STATE = {
   player: {},
   players: [],
   hand: [],
-  playersInfo: [],
+  playersInfo: {},
   playerInfo: {},
   status: 'lobby',
   wonderOption: {},
+  wonderCombos: [],
   wonders: [],
   playOrder: [],
   direction: 'left'
@@ -51,7 +52,16 @@ const reducer = (state, action) => {
   } else if (action.messageType === 'playOrder') {
     return {...state, playOrder: action.playOrder, direction: action.direction};
   } else if (action.messageType === 'hand') {
-    return {...state, hand: action.hand};
+    return {...state, hand: action.hand, wonderCombos: []};
+  } else if (action.messageType === 'playCombos') {
+    const hand = state.hand.map((card) => {
+      return card.name === action.card.name && card.players === action.card.players ?
+        {...card, playCombos: action.card.playCombos} :
+        {...card};
+    });
+    return {...state, hand};
+  } else if (action.messageType === 'wonderCombos') {
+    return {...state, wonderCombos: action.combos};
   } else if (action.messageType === 'startInfo') {
     const playerInfo = {
       ...state.playerInfo,
@@ -63,7 +73,9 @@ const reducer = (state, action) => {
       wonder: action.wonder,
       played: action.played
     };
-    return {...state, playerInfo, playersInfo: action.plinfo};
+    return {...state, playerInfo};
+  } else if (action.messageType === 'playersInfo') {
+    return {...state, playersInfo: action.playersInfo};
   } else {
     console.warn('Unhandled message', action);
     return state;
@@ -106,7 +118,7 @@ function App() {
     } else if (gameState.status === 'chooseSide') {
       return <ChooseSide sendMessage={sendMessage} {...gameState.wonderOption} maxPlayers={gameState.game.maxPlayers} wonders={gameState.wonders} />
     } else if (gameState.status === 'playing') {
-      return <Game setOverlayChildren={setOverlayChildren} sendMessage={sendMessage} hand={gameState.hand} playersInfo={gameState.playersInfo} playerInfo={gameState.playerInfo} playOrder={gameState.playOrder} wonders={gameState.wonders} direction={gameState.direction} />
+      return <Game setOverlayChildren={setOverlayChildren} sendMessage={sendMessage} hand={gameState.hand} playersInfo={gameState.playersInfo} playerInfo={gameState.playerInfo} playOrder={gameState.playOrder} wonders={gameState.wonders} direction={gameState.direction} wonderCombos={gameState.wonderCombos} />
     } else if (gameState.status === 'finished') {
       return <div>GAME OVER!</div>
     } else {
@@ -117,7 +129,7 @@ function App() {
   return (
     <>
       {overlayChildren && <Overlay dismiss={() => setOverlayChildren(null)}>{overlayChildren}</Overlay>}
-      <div className='App'>
+      <div className='App h-screen'>
         <div className="w-10/12 mx-auto">
           <MessageDiv text={message} type={messageType} dismissMessage={() => setMessage('')} />
         </div>

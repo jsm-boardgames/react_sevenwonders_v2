@@ -1,7 +1,8 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Card from './Card';
 
-const Hand = ({hand = [], sendMessage, setOverlayChildren}) => {
+const Hand = ({hand = [], sendMessage, setOverlayChildren, wonderCombos}) => {
+  const [canPlay, setCanPlay] = useState(true);
   const maxCards = hand.length;
   const cardClasses = {
     red: 'sw-military-card',
@@ -20,7 +21,7 @@ const Hand = ({hand = [], sendMessage, setOverlayChildren}) => {
       {hand.map((card, idx, arr) => {
         const x = 325 + (60 * (idx - midway));
         const rotate = `rotate(${10 * (idx - midway)} 400 200)`;
-        return <Card key={idx} svgAttributes={{transform: rotate}} sendMessage={sendMessage} setOverlayChildren={setOverlayChildren} {...card} y={30} x={x} />;
+        return <Card key={idx} svgAttributes={{transform: rotate}} sendMessage={sendMessage} setOverlayChildren={setOverlayChildren} {...card} y={30} x={x} wonderCombos={wonderCombos} />;
       })}
     </svg>
   );

@@ -1,6 +1,6 @@
-import {useRef, useEffect, useReducer} from 'react';
+import {useRef, useEffect} from 'react';
 
-const WS_PROTOCOL = `ws${window.location.protocol === 'https;' ? 's' : ''}:`;
+const WS_PROTOCOL = `ws${window.location.protocol === 'https:' ? 's' : ''}:`;
 const WS_HOST = window.location.hostname;
 const WS_PATH = `${window.location.port === '3000' ? 'dev_' : ''}node/seven_wonders`;
 const WS_URI = `${WS_PROTOCOL}${WS_HOST}/${WS_PATH}`;
@@ -11,10 +11,6 @@ const createSocket = () => {
 
 const useGameSocket = ({displayMessage, parseMessage}) => {
   const wsRef = useRef(null);
-  const onError = (event) => {
-    displayMessage({text: `ERROR: I'm sorry, something went wrong with the websocket!`, type: 'error'});
-    console.error(event, event.data);
-  };
   // ensure WS is ready before using it!
   const wsReady = () => {
     return wsRef.current && wsRef.current.readyState === 1;
@@ -42,9 +38,13 @@ const useGameSocket = ({displayMessage, parseMessage}) => {
   }, []);
   // rebind listeners each time the methods change
   useEffect(() => {
+    const onError = (event) => {
+      displayMessage({text: `ERROR: I'm sorry, something went wrong with the websocket!`, type: 'error'});
+      console.error(event, event.data);
+    };
     wsRef.current.onmessage = parseMessage;
     wsRef.current.onerror = onError;
-  }, [parseMessage, onError]);
+  }, [parseMessage]);
   return [login, sendMessage];
 };
 
