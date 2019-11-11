@@ -1,7 +1,7 @@
 import React from 'react';
 
-const ScoreRow = ({values = [], rowColor = 'grey'}) => {
-  const className = `bg-${rowColor}-400`;
+const ScoreRow = ({values = [], rowColor = 'gray'}) => {
+  const className = `bg-${rowColor}-200 border border-gray-600`;
   return (
     <tr className={className}>
       {values.map((v, idx) => <td key={idx}>{v}</td>)}
@@ -42,13 +42,13 @@ const ScoreSheet = ({ranking = []}) => {
     'yellow',
     'purple',
     'green',
-    'grey',
+    'gray',
   ];
   return (
-    <table>
+    <table className="table-fixed w-full text-2xl text-center border-2 border-gray-600 border-collapse">
       <thead>
-        <tr>
-          <th></th> {/*first column is for identifiers, rest for players*/}
+        <tr className="border border-gray-600">
+          <th className="w-40"></th>{/*first column is for identifiers, rest for players*/}
           {headers}
         </tr>
       </thead>

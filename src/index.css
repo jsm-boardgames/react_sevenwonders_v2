@@ -1,3 +1,8 @@
+/* winner winner*/
+.sw-winner:after, .sw-winner:before {
+  content: " ✭ ";
+  color: goldenrod;
+}
 /* CARDS */
 .sw-hand .sw-card {
   opacity: 0.1;
@@ -43,6 +48,10 @@
 
 .sw-guild-card {
   fill: #b794f4;
+}
+
+.bg-brown-200 {
+  background-color: #d6855c;
 }
 
 .bg-brown-400 {

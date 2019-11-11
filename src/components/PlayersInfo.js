@@ -18,7 +18,7 @@ const PlayerInfo = ({playerName = '', coins = 0, military = 0, stagesInfo = [], 
 
 const PlayersInfo = ({playOrder = [], playersInfo = {}}) => {
   return (
-    <div className='flex flex-col h-full w-full justify-around'>
+    <div className='flex flex-col h-full w-11/12 justify-around'>
       {playOrder.map(({playerId, direction}, index) => {
         return (
           <React.Fragment key={playerId}>

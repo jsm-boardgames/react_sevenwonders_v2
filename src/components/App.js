@@ -1,11 +1,11 @@
 import React, {useState, useCallback, useReducer} from 'react';
 import Game from './pages/Game';
+import EndGame from './pages/EndGame';
 import Lobby from './pages/Lobby';
 import Waiting from './pages/Waiting';
 import ChooseSide from './pages/ChooseSide';
 import MessageDiv from './MessageDiv';
 import Overlay from './Overlay';
-import ScoreSheet from './ScoreSheet';
 import useGameSocket from './../hooks/useGameSocket';
 
 const INITIAL_STATE = {
@@ -131,14 +131,10 @@ function App() {
           direction={gameState.direction}
           wonderCombos={gameState.wonderCombos} />
     } else if (gameState.status === 'finished') {
-      return (
-        <div>
-          <h1>GAME OVER!</h1>
-          <div className="w-10/12 mx-auto">
-            <ScoreSheet ranking={gameState.ranking} />
-          </div>
-        </div>
-      );
+      return <EndGame setOverlayChildren={setOverlayChildren}
+          playersInfo={gameState.playersInfo}
+          playOrder={gameState.playOrder}
+          ranking={gameState.ranking} />
     } else {
       displayMessage({text: 'ERROR! Unhandled game state.', type: 'error'});
       return null;
