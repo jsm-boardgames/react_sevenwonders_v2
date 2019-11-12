@@ -18,6 +18,7 @@ const ScoreSheet = ({ranking = []}) => {
     commercial = 0,
     guilds = 0,
     scienceScore = 0,
+    score = 0,
   }) => {
     acc[0].push(military);
     acc[1].push(Math.floor(coins / 3));
@@ -26,8 +27,7 @@ const ScoreSheet = ({ranking = []}) => {
     acc[4].push(commercial);
     acc[5].push(guilds);
     acc[6].push(scienceScore);
-    acc[7].push(military + Math.floor(coins / 3) + wonderPoints +
-        commercial + guilds + scienceScore);
+    acc[7].push(score);
     return acc;
   }, [['military'],['coins'],['wonder'],['blue'],['yellow'],['guilds'],['science'],['total'],]); 
   const headers = ranking.map(({playerName, winner}, idx) => {
