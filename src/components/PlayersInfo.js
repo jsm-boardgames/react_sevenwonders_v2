@@ -1,7 +1,14 @@
-import React from 'react';
+import React, { useRef, useEffect, } from 'react';
 import GameBadge from './GameBadge';
+import PlayerSummary from './PlayerSummary';
 
-const PlayerInfo = ({playerName = '', coins = 0, military = 0, stagesInfo = [], wonderSide = 'a', wonderName = '', wonderResource = '', cardsPlayed = []}) => {
+const PlayerInfo = ({playerName = '', coins = 0, military = 0, stagesInfo = [], wonderSide = 'a', wonderName = '', wonderResource = '', cardsPlayed = [], scienceValues = []}) => {
+  const myRef = useRef(null);
+  useEffect(() => {
+    if (myRef.current != null) {
+      myRef.current.querySelector('.popover').style.left = `${myRef.current.offsetWidth + 10}px`;
+    }
+  }, [myRef]);
   const stage = stagesInfo.filter(s => s.isBuilt).length;
   const stageNum = stage === 4 ? 'IV' : 'I'.repeat(stage);
   const wonderDisplay = stage === 0 ?
@@ -13,10 +20,23 @@ const PlayerInfo = ({playerName = '', coins = 0, military = 0, stagesInfo = [], 
   }, {})).map(([type, value]) => <GameBadge type={type} value={value} key={type} />);
   const formattedCoins = `$${coins}`;
   return (
-    <div className='w-full flex flex-col bg-blue-200 m-2 p-4 rounded-lg'>
+    <div ref={myRef} className='popover-container w-full flex flex-col bg-blue-200 hover:bg-blue-300 m-2 p-4 rounded-lg'>
       <div>{playerName}</div>
       <div><GameBadge type='treasury' value={formattedCoins} /> {badges}</div>
       <div>{wonderDisplay}</div>
+      <div className="fixed popover">
+        <PlayerSummary
+          playerName={playerName}
+          coins={coins}
+          military={military}
+          stagesInfo={stagesInfo}
+          wonderSide={wonderSide}
+          wonderName={wonderName}
+          wonderResource={wonderResource}
+          cardsPlayed={cardsPlayed}
+          scienceValues={scienceValues}
+        />
+      </div>
     </div>
   );
 };
