@@ -117,7 +117,7 @@ function App() {
     if (gameState.status === 'lobby') {
       return <Lobby login={login} sendMessage={sendMessage} displayMessage={displayMessage} games={gameState.games} />
     } else if (gameState.status === 'waiting') {
-      return <Waiting players={gameState.players} {...gameState.game} />
+      return <Waiting sendMessage={sendMessage} players={gameState.players} {...gameState.game} />
     } else if (gameState.status === 'chooseSide') {
       return <ChooseSide sendMessage={sendMessage} {...gameState.wonderOption} maxPlayers={gameState.game.maxPlayers} wonders={gameState.wonders} />
     } else if (gameState.status === 'playing') {
