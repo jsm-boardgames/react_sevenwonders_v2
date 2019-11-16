@@ -18,6 +18,9 @@ const PlayerSummary = ({
   const wonderDisplay = stage === 0 ?
       `${wonderName} side: ${wonderSide}` :
       `${wonderName} side: ${wonderSide} stage: ${stageNum}`;
+  const wonderResourceType = ['L', 'G', 'P'].indexOf(wonderResource) > -1 ?
+      'manufacturedResource' :
+      'naturalResource';
   const resourceInfo = cardsPlayed.filter(card => card.isResource)
       .reduce((acc, card) => {
         const resType = card.type === 'commercial' ? 'nonBuyable' : card.type;
@@ -27,11 +30,14 @@ const PlayerSummary = ({
           acc[resType].push(card.value);
         }
         return acc;
-      }, {nonBuyable: [wonderResource],});
+      }, {[wonderResourceType]: [wonderResource], nonBuyable: []});
   // get alexandria's built resources from wonder
   resourceInfo.nonBuyable.push(...stagesInfo.filter(s => s.isBuilt)
       .filter(s => s.resource != null)
       .map(s => s.resource));
+  if (resourceInfo.nonBuyable.length === 0) {
+    delete resourceInfo.nonBuyable;
+  }
   const scienceBadges = scienceValues.map((sv, idx) => <GameBadge type='science' value={sv} key={idx} />)
   const formattedCoins = `$${coins}`;
   const milStr = cardsPlayed.filter(({type}) => type === 'military')

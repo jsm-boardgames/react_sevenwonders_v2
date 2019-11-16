@@ -6,7 +6,7 @@ const Game = ({playersInfo, hand, playOrder, direction, wonders, playerInfo, set
   return (
     <div className='w-full h-full'>
       <div className="w-1/4 inline-flex h-full">
-        <PlayersInfo playOrder={playOrder} playersInfo={playersInfo} />
+        <PlayersInfo playOrder={playOrder} playersInfo={playersInfo} setOverlayChildren={setOverlayChildren} />
       </div>
       <div className="w-3/4 inline float-right">
         <Hand hand={hand} setOverlayChildren={setOverlayChildren} sendMessage={sendMessage} wonderCombos={wonderCombos} />
