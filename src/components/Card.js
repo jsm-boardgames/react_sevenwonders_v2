@@ -7,7 +7,7 @@ const CARD_CLASSES = {
   red: 'sw-military-card',
   blue: 'sw-civilian-card',
   brown: 'sw-natural-resource-card',
-  grey: 'sw-manufactured-resource-card',
+  gray: 'sw-manufactured-resource-card',
   green: 'sw-science-card',
   purple: 'sw-guild-card',
   yellow: 'sw-commercial-card'
