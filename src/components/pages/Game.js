@@ -1,15 +1,20 @@
 import React from 'react';
 import Hand from './../Hand';
 import PlayersInfo from './../PlayersInfo';
+import FreePlay from './../FreePlay';
 
-const Game = ({playersInfo, hand, playOrder, direction, wonders, playerInfo, setOverlayChildren, sendMessage, wonderCombos}) => {
+const Game = ({playersInfo, hand, possibleCards, playOrder, direction, wonders, playerInfo, setOverlayChildren, sendMessage, wonderCombos}) => {
+  const cardsComponent = possibleCards.length > 0 ?
+      <FreePlay possibleCards={possibleCards} sendMessage={sendMessage} /> :
+      <Hand hand={hand} setOverlayChildren={setOverlayChildren} sendMessage={sendMessage} wonderCombos={wonderCombos} />;
+
   return (
     <div className='w-full h-full'>
       <div className="w-1/4 inline-flex h-full">
         <PlayersInfo playOrder={playOrder} playersInfo={playersInfo} setOverlayChildren={setOverlayChildren} />
       </div>
       <div className="w-3/4 inline float-right">
-        <Hand hand={hand} setOverlayChildren={setOverlayChildren} sendMessage={sendMessage} wonderCombos={wonderCombos} />
+        {cardsComponent}
       </div>
     </div>
   );

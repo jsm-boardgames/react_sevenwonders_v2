@@ -4,15 +4,6 @@ import Card from './Card';
 const Hand = ({hand = [], sendMessage, setOverlayChildren, wonderCombos}) => {
   const [canPlay, setCanPlay] = useState(true);
   const maxCards = hand.length;
-  const cardClasses = {
-    red: 'sw-military-card',
-    blue: 'sw-cultural-card',
-    brown: 'sw-natural-resource-card',
-    grey: 'sw-manufactured-resource-card',
-    green: 'sw-science-card',
-    purple: 'sw-guild-card',
-    yellow: 'sw-commercial-card'
-  };
   const svgWidth = 800;
   const viewBox = `0 0 ${svgWidth} ${svgWidth / 2}`;
   const midway = (maxCards - 1) / 2;

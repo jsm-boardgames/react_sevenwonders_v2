@@ -14,6 +14,7 @@ const INITIAL_STATE = {
   player: {},
   players: [],
   hand: [],
+  possibleCards: [],
   playersInfo: {},
   playerInfo: {},
   status: 'lobby',
@@ -21,7 +22,9 @@ const INITIAL_STATE = {
   wonderCombos: [],
   wonders: [],
   playOrder: [],
-  direction: 'left'
+  direction: 'left',
+  systemMessage: '',
+  systemMessageType: 'info',
 };
 
 const reducer = (state, action) => {
@@ -53,7 +56,7 @@ const reducer = (state, action) => {
   } else if (action.messageType === 'playOrder') {
     return {...state, playOrder: action.playOrder, direction: action.direction};
   } else if (action.messageType === 'hand') {
-    return {...state, hand: action.hand, wonderCombos: []};
+    return {...state, possibleCards: [], hand: action.hand, wonderCombos: []};
   } else if (action.messageType === 'playCombos') {
     const hand = state.hand.map((card) => {
       return card.name === action.card.name && card.players === action.card.players ?
@@ -79,6 +82,11 @@ const reducer = (state, action) => {
     return {...state, playersInfo: action.playersInfo};
   } else if (action.messageType === 'ranking') {
     return {...state, ranking: action.ranking, status: 'finished'};
+  } else if (action.messageType === 'systemMessage') {
+    const systemMessageType = action.systemMessageType || 'info';
+    return {...state, systemMessage: action.message, systemMessageType,}; 
+  } else if (action.messageType === 'freeWonderPlay') {
+    return {...state, possibleCards: action.possibleCards};
   } else {
     console.warn('Unhandled message', action);
     return state;
@@ -101,17 +109,6 @@ function App() {
     setMessage(text);
     setMessageType(type);
   };
-  const onError = (error) => {
-    displayMessage({text: `ERROR: I'm sorry, something went wrong!`, type: 'error'});
-    console.error(error);
-  };
-  const callbackMap = {
-    //wonderOption
-    //playOrder
-    //sideChosen
-    //hand
-    //playCombos
-  };
   const [login, sendMessage] = useGameSocket({displayMessage, parseMessage});
   const getPage = () => {
     if (gameState.status === 'lobby') {
@@ -124,6 +121,7 @@ function App() {
       return <Game setOverlayChildren={setOverlayChildren}
           sendMessage={sendMessage}
           hand={gameState.hand}
+          possibleCards={gameState.possibleCards}
           playersInfo={gameState.playersInfo}
           playerInfo={gameState.playerInfo} 
           playOrder={gameState.playOrder}
@@ -145,6 +143,7 @@ function App() {
       {overlayChildren && <Overlay dismiss={() => setOverlayChildren(null)}>{overlayChildren}</Overlay>}
       <div className='App h-screen'>
         <div className="w-10/12 mx-auto">
+          <MessageDiv text={gameState.systemMessage} type={gameState.systemMessageType} dismissMessage={() => {handleMessage({messageType: 'systemMessage', message: ''})}} />
           <MessageDiv text={message} type={messageType} dismissMessage={() => setMessage('')} />
         </div>
         {getPage()}
