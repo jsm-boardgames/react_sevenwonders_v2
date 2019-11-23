@@ -47,7 +47,11 @@ const Card = ({name, players, playCombos, value, cost, svgAttributes = {}, x = 0
       <rect x={x} y={y} width='150' height='220' />
       <text x={x + 5} y={y + 15} textLength="90" className='text-sm'>{name}</text>
       <foreignObject x={x + 5} y={y + 30} width='140' height='190'>
-        <div>Cost: {cost && cost.split('').map((r,i) => <Resource resource={r} key={i} />)}</div>
+        <div>Cost: 
+          <div className='flex flex-wrap'>
+            {cost && cost.split('').map((r,i) => <Resource resource={r} key={i} />)}
+          </div>
+        </div>
         <Separator />
         <div>Value: {value}</div>
       </foreignObject>
