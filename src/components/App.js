@@ -66,24 +66,12 @@ const reducer = (state, action) => {
     return {...state, hand};
   } else if (action.messageType === 'wonderCombos') {
     return {...state, wonderCombos: action.combos};
-  } else if (action.messageType === 'startInfo') {
-    const playerInfo = {
-      ...state.playerInfo,
-      coins: action.coins,
-      military: action.military,
-      leftCards: action.leftcards,
-      rightCards: action.rightcards,
-      rejoin: action.rejoin,
-      wonder: action.wonder,
-      played: action.played
-    };
-    return {...state, playerInfo};
   } else if (action.messageType === 'playersInfo') {
-    return {...state, playersInfo: action.playersInfo};
+    return {...state, playersInfo: action.playersInfo, playerInfo: action.playersInfo[state.player.id]};
   } else if (action.messageType === 'ranking') {
     return {...state, ranking: action.ranking, status: 'finished'};
   } else if (action.messageType === 'systemMessage') {
-    const systemMessageType = action.systemMessageType || 'info';
+    const systemMessageType = action.messageType || 'info';
     return {...state, systemMessage: action.message, systemMessageType,}; 
   } else if (action.messageType === 'freeWonderPlay') {
     return {...state, possibleCards: action.possibleCards};

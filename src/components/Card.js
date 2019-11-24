@@ -12,7 +12,7 @@ const CARD_CLASSES = {
   purple: 'sw-guild-card',
   yellow: 'sw-commercial-card'
 };
-const Card = ({name, players, playCombos, value, cost, svgAttributes = {}, x = 0, y = 0, color, sendMessage, setOverlayChildren, wonderCombos}) => {
+const Card = ({name, players, playCombos = [], value, cost, svgAttributes = {}, x = 0, y = 0, color, sendMessage, setOverlayChildren, wonderCombos, olympiaFreeBuild}) => {
   const getWonderCombos = () => {
     if (wonderCombos == null) {
       return <div className='w-full'>Loading potential wonder build, please check back later</div>;
@@ -23,10 +23,22 @@ const Card = ({name, players, playCombos, value, cost, svgAttributes = {}, x = 0
     }
   };
   const onClick = (e) => {
-    const formattedCombos = (playCombos != null && playCombos.length > 0) ?
-      <div className='w-full'>{playCombos.map((pc, i) => <PlayCombo key={i} onClick={() => {sendMessage({messageType: 'playCard', card: {name, players}, clockwise: pc.clockwise, counterClockwise: pc.counterClockwise, self: pc.self}); setOverlayChildren(null); }} {...pc} />)}</div> :
-      <div className='w-full'>It is not possible for you to play this card</div>;
-    setOverlayChildren && playCombos != null && setOverlayChildren((
+    const formattedCombos = (olympiaFreeBuild || playCombos.length > 0) ?
+        (
+          <div className='w-full'>
+            {playCombos.map((pc, i) => <PlayCombo
+                key={i}
+                onClick={() => {
+                  sendMessage({messageType: 'playCard', card: {name, players}, clockwise: pc.clockwise, counterClockwise: pc.counterClockwise, self: pc.self});
+                  setOverlayChildren(null);
+                }}
+                {...pc} />
+            )}
+            {olympiaFreeBuild && <div className='w-full text-large'><button onClick={() => {sendMessage({messageType: 'useOlympia', card: {name, players}}); setOverlayChildren(null);}} className='m-4 bg-blue-200 hovor:bg-blue-400'>Choose</button>{playCombos.length > 0 ? 'Or ' : ''}you can use your once per age free build (from your wonder)</div>}
+          </div>
+        ) :
+        <div className='w-full'>It is not possible for you to play this card</div>;
+    setOverlayChildren && setOverlayChildren((
       <div className='flex'>
         <svg viewBox='0 0 150 220' xmlns='http://www.w3.org/2000/svg' className='h-screen-50 w-1/2'>
           <Card name={name} value={value} cost={cost} color={color} sendMessage={sendMessage} />

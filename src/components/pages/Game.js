@@ -6,7 +6,7 @@ import FreePlay from './../FreePlay';
 const Game = ({playersInfo, hand, possibleCards, playOrder, direction, wonders, playerInfo, setOverlayChildren, sendMessage, wonderCombos}) => {
   const cardsComponent = possibleCards.length > 0 ?
       <FreePlay possibleCards={possibleCards} sendMessage={sendMessage} /> :
-      <Hand hand={hand} setOverlayChildren={setOverlayChildren} sendMessage={sendMessage} wonderCombos={wonderCombos} />;
+      <Hand olympiaFreeBuild={playerInfo.olympiaFreeBuild} hand={hand} setOverlayChildren={setOverlayChildren} sendMessage={sendMessage} wonderCombos={wonderCombos} />;
 
   return (
     <div className='w-full h-full'>
