@@ -3,10 +3,10 @@ import Hand from './../Hand';
 import PlayersInfo from './../PlayersInfo';
 import FreePlay from './../FreePlay';
 
-const Game = ({playersInfo, hand, possibleCards, playOrder, direction, wonders, playerInfo, setOverlayChildren, sendMessage, wonderCombos}) => {
+const Game = ({playersInfo, canPlay, hand, possibleCards, playOrder, direction, wonders, playerInfo, setOverlayChildren, sendMessage, wonderCombos}) => {
   const cardsComponent = possibleCards.length > 0 ?
       <FreePlay possibleCards={possibleCards} sendMessage={sendMessage} /> :
-      <Hand olympiaFreeBuild={playerInfo.olympiaFreeBuild} hand={hand} setOverlayChildren={setOverlayChildren} sendMessage={sendMessage} wonderCombos={wonderCombos} />;
+      <Hand olympiaFreeBuild={playerInfo.olympiaFreeBuild} canPlay={canPlay} hand={hand} setOverlayChildren={setOverlayChildren} sendMessage={sendMessage} wonderCombos={wonderCombos} />;
 
   return (
     <div className='w-full h-full'>

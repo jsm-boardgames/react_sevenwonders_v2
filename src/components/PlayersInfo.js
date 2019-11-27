@@ -19,6 +19,7 @@ const PlayerInfo = ({
   useEffect(() => {
     if (myRef.current != null) {
       myRef.current.querySelector('.popover').style.left = `${myRef.current.offsetWidth + 10}px`;
+      myRef.current.querySelector('.popover').style.top = `${myRef.current.getBoundingClientRect().y - 25}px`;
     }
   }, [myRef]);
   const stage = stagesInfo.filter(s => s.isBuilt).length;

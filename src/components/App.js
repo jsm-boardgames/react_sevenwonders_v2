@@ -17,6 +17,7 @@ const INITIAL_STATE = {
   possibleCards: [],
   playersInfo: {},
   playerInfo: {},
+  canPlay: true,
   status: 'lobby',
   wonderOption: {},
   wonderCombos: [],
@@ -55,6 +56,8 @@ const reducer = (state, action) => {
     return {...state, wonders, status};
   } else if (action.messageType === 'playOrder') {
     return {...state, playOrder: action.playOrder, direction: action.direction};
+  } else if (action.messageType === 'canPlay') {
+    return {...state, canPlay: action.value};
   } else if (action.messageType === 'hand') {
     return {...state, possibleCards: [], hand: action.hand, wonderCombos: []};
   } else if (action.messageType === 'playCombos') {
@@ -115,6 +118,7 @@ function App() {
           playOrder={gameState.playOrder}
           wonders={gameState.wonders}
           direction={gameState.direction}
+          canPlay={gameState.canPlay}
           wonderCombos={gameState.wonderCombos} />
     } else if (gameState.status === 'finished') {
       return <EndGame setOverlayChildren={setOverlayChildren}
