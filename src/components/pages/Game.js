@@ -11,7 +11,7 @@ const Game = ({playersInfo, canPlay, hand, possibleCards, playOrder, direction, 
   return (
     <div className='w-full h-full'>
       <div className="w-1/4 inline-flex h-full">
-        <PlayersInfo playOrder={playOrder} playersInfo={playersInfo} setOverlayChildren={setOverlayChildren} />
+        <PlayersInfo direction={direction} playOrder={playOrder} playersInfo={playersInfo} setOverlayChildren={setOverlayChildren} />
       </div>
       <div className="w-3/4 inline float-right">
         {cardsComponent}

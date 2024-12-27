@@ -82,7 +82,9 @@ const Lobby = ({login, displayMessage, sendMessage, games = []}) => {
       <div className='bg-gray-200 container mx-auto rounded-lg'>
         <h1 className='text-center text-3xl my-4'>Seven Wonders</h1>
         <div className='text-center'>
-          <p>Created by Antoine Bauza, published by Repos Productions</p>
+          <p>Original boardgame created by Antoine Bauza, published by Repos Productions</p>
+          <p>React/Node/Neo4j implementation by Jacob McCrumb</p>
+          <p>Note: don't use important personal information as your login</p>
         </div>
         <Separator color='gray-400' margin='4' />
         {playerInfo}

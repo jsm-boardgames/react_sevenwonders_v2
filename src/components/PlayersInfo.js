@@ -65,7 +65,7 @@ const PlayerInfo = ({
   );
 };
 
-const PlayersInfo = ({playOrder = [], playersInfo = {}, setOverlayChildren,}) => {
+const PlayersInfo = ({playOrder = [], playersInfo = {}, setOverlayChildren, direction}) => {
   return (
     <div className='flex flex-col h-full w-11/12 justify-around'>
       {playOrder.map(({playerId, direction}, index) => {
