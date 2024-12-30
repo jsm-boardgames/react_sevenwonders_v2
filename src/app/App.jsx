@@ -78,29 +78,35 @@ const reducer = (state, action) => {
     return {...state, systemMessage: action.message, systemMessageType,}; 
   } else if (action.messageType === 'freeWonderPlay') {
     return {...state, possibleCards: action.possibleCards};
+  } else if (action.messageType === 'reconnect') {
+    const status = !!state.playersInfo ? 'playing' : 'waiting';
+    return { ...state, status };
+  } else if (action.messageType === 'disconnected') {
+    return { ...state, status: 'disconnected' };
   } else {
     console.warn('Unhandled message', action);
     return state;
   }
 };
 
-function App() {
+export function App() {
   const [gameState, handleMessage] = useReducer(reducer, INITIAL_STATE);
   const [overlayChildren, setOverlayChildren] = useState(null);
   const parseMessage = useCallback((msg) => {
     try {
+      console.log('try to parse');
       handleMessage(JSON.parse(msg.data));
     } catch (e) {
       console.warn('Error in handling message', msg, e);
     }
-  }, handleMessage);
+  }, [handleMessage]);
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('info');
   const displayMessage = ({text, type = 'info'}) => {
     setMessage(text);
     setMessageType(type);
   };
-  const [login, sendMessage] = useGameSocket({displayMessage, parseMessage});
+  const [login, sendMessage] = useGameSocket(displayMessage, parseMessage);
   const getPage = () => {
     if (gameState.status === 'lobby') {
       return <Lobby login={login} sendMessage={sendMessage} displayMessage={displayMessage} games={gameState.games} />
@@ -125,6 +131,11 @@ function App() {
           playersInfo={gameState.playersInfo}
           playOrder={gameState.playOrder}
           ranking={gameState.ranking} />
+    } else if (gameState.status === 'disconnected') {
+      return (<>
+        <h1>You have been disconnected. Please reconnect.</h1>
+        <button onClick={() => login(gameState.player.name)} type="button">reconnect</button>
+        </>);
     } else {
       displayMessage({text: 'ERROR! Unhandled game state.', type: 'error'});
       return null;
@@ -143,5 +154,3 @@ function App() {
     </>
   );
 }
-
-export default App;

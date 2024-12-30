@@ -11,7 +11,16 @@ const Hand = ({olympiaFreeBuild = false, canPlay, hand = [], sendMessage, setOve
       {hand.map((card, idx, arr) => {
         const x = 325 + (60 * (idx - midway));
         const rotate = `rotate(${10 * (idx - midway)} 400 200)`;
-        return <Card key={idx} olympiaFreeBuild={olympiaFreeBuild} svgAttributes={{transform: rotate}} sendMessage={sendMessage} setOverlayChildren={canPlay && setOverlayChildren} {...card} y={30} x={x} wonderCombos={wonderCombos} />;
+        return <Card 
+            key={idx}
+            olympiaFreeBuild={olympiaFreeBuild}
+            svgAttributes={{transform: rotate}}
+            sendMessage={sendMessage}
+            setOverlayChildren={canPlay && setOverlayChildren}
+            {...card}
+            y={30}
+            x={x}
+            wonderCombos={wonderCombos} />;
       })}
     </svg>
   );
